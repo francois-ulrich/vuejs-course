@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import QuizzQuestion from "./QuizzQuestion";
 
 const questionsNumber = 10;
 const questions = [...Array(questionsNumber)].map(() => new QuizzQuestion());
-const interval = setInterval(onIntervalEnd, 5000);
+const interval = setInterval(onIntervalEnd, 500);
 const inputRef = ref<HTMLInputElement | null>(null);
 
 let score = ref(0);
@@ -12,11 +12,11 @@ let answer = ref<number | null>(null);
 let questionIndex = ref(0);
 let question = ref(questions[0]);
 
-let isQuizFinished = ref(false);
+const questionText = computed(() => question.value?.getText());
+const isQuizFinished = computed(() => questionIndex.value == questions.length);
 
 function onIntervalEnd() {
-  if (questionIndex.value == questions.length - 1) {
-    isQuizFinished.value = true;
+  if (isQuizFinished.value) {
     clearInterval(interval);
     return;
   }
@@ -27,6 +27,7 @@ function onIntervalEnd() {
   questionIndex.value++;
   question.value = questions[questionIndex.value];
 
+  // clear input & set focus on it
   answer.value = null;
   inputRef.value?.focus();
 }
@@ -37,7 +38,7 @@ function onIntervalEnd() {
     <h1>Quizz time !</h1>
 
     <h2>Question {{ questionIndex + 1 }}</h2>
-    <h2>{{ question?.getText() }}</h2>
+    <h2>{{ questionText }}</h2>
 
     <input v-model="answer" name="answer" type="number" ref="inputRef" />
 
