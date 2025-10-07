@@ -1,10 +1,18 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import type { ImageItemData } from "./Interfaces/ImageItemData";
+import ImageItem from "./ImageItem.vue";
 
-let items = ref<ImageItemData[]>([]);
+interface Props {
+  items: ImageItemData[];
+}
+
+const props = defineProps<Props>();
 </script>
 
 <template>
-  <div></div>
+  <ul>
+    <li v-for="item in props.items">
+      <ImageItem :data="item" />
+    </li>
+  </ul>
 </template>

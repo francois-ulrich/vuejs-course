@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import type { ImageItemData } from "./Interfaces/ImageItemData";
 
-let data = ref<ImageItemData>();
+interface Props {
+  data: ImageItemData;
+}
+
+const props = defineProps<Props>();
 </script>
 
 <template>
   <article>
-    <p>id&nbsp;:{{ data?.id }}</p>
-    <p>imageUrl&nbsp;:{{ data?.imageUrl }}</p>
-    <p>isInFavorites&nbsp;:{{ data?.isInFavorites }}</p>
+    <p>id&nbsp;:{{ props.data.id }}</p>
+    <p>imageUrl&nbsp;:{{ props.data.imageUrl }}</p>
+    <p>isInFavorites&nbsp;:{{ props.data.isInFavorites }}</p>
   </article>
 </template>

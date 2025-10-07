@@ -3,6 +3,7 @@ import { ref } from "vue";
 import type { ImageGalleryFormData } from "./Interfaces/ImageGalleryFormData";
 
 let form = ref<ImageGalleryFormData>({ imageUrl: "" });
+
 const emit = defineEmits<{
   submit: [value: ImageGalleryFormData];
 }>();
