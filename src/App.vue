@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import Quizz from "./components/Lesson01/Quizz.vue";
+import ImageGallery from "./components/Project02/ImageGallery.vue";
 </script>
 
 <template>
-  <Quizz />
+  <ImageGallery />
 </template>

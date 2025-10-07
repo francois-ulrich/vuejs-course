@@ -4,7 +4,7 @@ import QuizzQuestion from "./QuizzQuestion";
 
 const questionsNumber = 10;
 const questions = [...Array(questionsNumber)].map(() => new QuizzQuestion());
-const interval = setInterval(onIntervalEnd, 500);
+const interval = setInterval(onIntervalEnd, 5000);
 const inputRef = ref<HTMLInputElement | null>(null);
 
 let score = ref(0);
