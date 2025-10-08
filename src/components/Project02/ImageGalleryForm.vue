@@ -9,6 +9,8 @@ const emit = defineEmits<{
 }>();
 
 function onSubmit() {
+  if (form.value.imageUrl === "") return;
+
   emit("submit", form.value);
 }
 </script>
@@ -16,9 +18,16 @@ function onSubmit() {
 <template>
   <div>
     <form @submit.prevent="onSubmit">
-      <input v-model="form.imageUrl" name="imageUrl" ref="imageUrlInputRef" />
+      <label for="imageUrl">Add image url</label>
+      <br></br>
+      <input
+        v-model="form.imageUrl"
+        id="imageUrl"
+        name="imageUrl"
+        ref="imageUrlInputRef"
+      />
 
-      <input type="submit" value="Add Photo" />
+      <input type="submit" value="Add image" />
     </form>
   </div>
 </template>

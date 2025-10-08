@@ -1,5 +1,5 @@
 export interface ImageItemData {
-  id: number;
+  id: string;
   imageUrl: string;
   isInFavorites: boolean;
 }
