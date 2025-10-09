@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref, useTemplateRef } from "vue";
 import type TaskManagerFormData from "../Types/TaskManagerFormData";
 import { TaskItemPriority } from "../Types/TaskItemPriority";
+
+const taskNameInputRef = useTemplateRef("taskNameInputRef");
 
 let form = ref<TaskManagerFormData>({
   taskName: "",
@@ -16,12 +18,22 @@ function onSubmit() {
   if (form.value.taskName === "" || form.value.priority === null) return;
   emit("submit", form.value);
 }
+
+onMounted(() => {
+  taskNameInputRef.value?.focus();
+});
 </script>
 
 <template>
   <form @submit.prevent="onSubmit">
     <label for="taskName">Task name :</label>
-    <input type="text" id="taskName" name="taskName" v-model="form.taskName" />
+    <input
+      type="text"
+      id="taskName"
+      name="taskName"
+      v-model="form.taskName"
+      ref="taskNameInputRef"
+    />
 
     <br />
 
@@ -35,6 +47,6 @@ function onSubmit() {
 
     <br />
 
-    <input type="submit" value="Add priority" />
+    <input type="submit" value="Add task" />
   </form>
 </template>

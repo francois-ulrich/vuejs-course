@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import TaskManagerForm from "./Components/TaskManagerForm.vue";
 import TaskItem from "./Components/TaskItem.vue";
 import type { TaskItemData } from "./Types/TaskItemData";
 import type TaskManagerFormData from "./Types/TaskManagerFormData";
 import { v4 as uuidv4 } from "uuid";
+
+const localStorageItemKey = "taskItems";
 
 let items = ref<TaskItemData[]>([]);
 
@@ -15,10 +17,33 @@ function onFormSubmit(formData: TaskManagerFormData) {
     priority: formData.priority,
   };
 
-  console.log(newItem);
-
   items.value.push(newItem);
 }
+
+onMounted(() => {
+  const localStorageData = localStorage.getItem(localStorageItemKey);
+
+  console.log({ localStorageData });
+
+  if (localStorageData === null) return;
+
+  try {
+    // ✅ Parse proprement et typé
+    items.value = JSON.parse(localStorageData) as TaskItemData[];
+
+    console.log({ parsedItems: items.value });
+  } catch (err) {
+    console.error("Erreur de parsing du localStorage:", err);
+  }
+});
+
+watch(
+  items,
+  () => {
+    localStorage.setItem(localStorageItemKey, JSON.stringify(items.value));
+  },
+  { deep: true }
+);
 </script>
 
 <template>
