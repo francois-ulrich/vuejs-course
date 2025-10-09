@@ -27,7 +27,10 @@ const props = defineProps<Props>();
   <article class="image-item">
     <img :src="props.data.imageUrl" class="image-item-img" />
     <button class="btn-delete" v-on:click="handleDelete">X</button>
-    <button class="btn-favorite" v-on:click="addToFavorites">
+    <button
+      v-on:click="addToFavorites"
+      :class="{ 'btn-favorite': true, 'btn-favorite--favorite': isInFavorites }"
+    >
       {{ isInFavorites ? "In favourites" : "Not in favourites" }}
     </button>
   </article>
@@ -54,6 +57,11 @@ button {
 
   /* width: 20px;
   height: 20px; */
+}
+
+.btn-favorite--favorite {
+  background-color: gold;
+  color: black;
 }
 
 .btn-delete {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import ImageGallery from "./components/Project02/ImageGallery.vue";
+import TaskManager from "./components/Project03/TaskManager.vue";
 </script>
 
 <template>
-  <ImageGallery />
+  <TaskManager />
 </template>
