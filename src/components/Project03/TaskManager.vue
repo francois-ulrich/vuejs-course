@@ -20,6 +20,10 @@ function onFormSubmit(formData: TaskManagerFormData) {
   items.value.push(newItem);
 }
 
+function onItemDelete(itemId: string) {
+  items.value = items.value.filter((item) => item.id != itemId);
+}
+
 onMounted(() => {
   const localStorageData = localStorage.getItem(localStorageItemKey);
 
@@ -28,7 +32,6 @@ onMounted(() => {
   if (localStorageData === null) return;
 
   try {
-    // ✅ Parse proprement et typé
     items.value = JSON.parse(localStorageData) as TaskItemData[];
 
     console.log({ parsedItems: items.value });
@@ -47,15 +50,18 @@ watch(
 </script>
 
 <template>
-  <TaskManagerForm @submit="onFormSubmit" />
+  <div class="p-4">
+    <TaskManagerForm
+      @submit="onFormSubmit"
+      class="rounded-sm border rounded-md border-solid border-gray-400 p-2 mb-4"
+    />
 
-  <hr />
-
-  <div>
-    <ul>
-      <li v-for="(item, index) in items" :key="index">
-        <TaskItem :data="item"></TaskItem>
-      </li>
-    </ul>
+    <div>
+      <ul class="flex flex-col gap-4">
+        <li v-for="(item, index) in items" :key="index">
+          <TaskItem :data="item" @delete="onItemDelete"></TaskItem>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>

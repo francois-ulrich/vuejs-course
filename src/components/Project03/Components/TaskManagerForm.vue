@@ -25,28 +25,38 @@ onMounted(() => {
 </script>
 
 <template>
-  <form @submit.prevent="onSubmit">
-    <label for="taskName">Task name :</label>
+  <form @submit.prevent="onSubmit" class="flex flex-col gap-2">
+    <div>
+      <label for="taskName">Task name :</label>
+      <input
+        type="text"
+        id="taskName"
+        name="taskName"
+        v-model="form.taskName"
+        ref="taskNameInputRef"
+        class="rounded-sm border border-solid border-gray-400 ml-2"
+      />
+    </div>
+
+    <div>
+      <label for="priority">Priority :</label>
+      <select
+        id="priority"
+        name="priority"
+        v-model="form.priority"
+        class="rounded-sm border border-solid border-gray-400 ml-2"
+      >
+        <option disabled :value="null">Please select a priority</option>
+        <option v-for="option in TaskItemPriority" :value="option">
+          {{ option }}
+        </option>
+      </select>
+    </div>
+
     <input
-      type="text"
-      id="taskName"
-      name="taskName"
-      v-model="form.taskName"
-      ref="taskNameInputRef"
+      type="submit"
+      value="Add task"
+      class="rounded-md bg-blue-500 hover:bg-blue-300 px-4 py-2 text-sm font-semibold text-white opacity-100 focus:outline-none cursor-pointer transition-colors"
     />
-
-    <br />
-
-    <label for="priority">Priority</label>
-    <select id="priority" name="priority" v-model="form.priority">
-      <option disabled :value="null">Please select a priority</option>
-      <option v-for="option in TaskItemPriority" :value="option">
-        {{ option }}
-      </option>
-    </select>
-
-    <br />
-
-    <input type="submit" value="Add task" />
   </form>
 </template>
