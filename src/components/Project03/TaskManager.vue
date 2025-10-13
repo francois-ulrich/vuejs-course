@@ -5,6 +5,7 @@ import TaskItem from "./Components/TaskItem.vue";
 import type { TaskItemData } from "./Types/TaskItemData";
 import type TaskManagerFormData from "./Types/TaskManagerFormData";
 import { v4 as uuidv4 } from "uuid";
+import FilterForm from "./Components/FilterForm.vue";
 
 const localStorageItemKey = "taskItems";
 
@@ -20,6 +21,10 @@ function onFormSubmit(formData: TaskManagerFormData) {
   items.value.push(newItem);
 }
 
+function onFilterFormSubmit(filterValue: string) {
+  console.log(filterValue);
+}
+
 function onItemDelete(itemId: string) {
   items.value = items.value.filter((item) => item.id != itemId);
 }
@@ -27,14 +32,10 @@ function onItemDelete(itemId: string) {
 onMounted(() => {
   const localStorageData = localStorage.getItem(localStorageItemKey);
 
-  console.log({ localStorageData });
-
   if (localStorageData === null) return;
 
   try {
     items.value = JSON.parse(localStorageData) as TaskItemData[];
-
-    console.log({ parsedItems: items.value });
   } catch (err) {
     console.error("Erreur de parsing du localStorage:", err);
   }
@@ -53,6 +54,11 @@ watch(
   <div class="p-4">
     <TaskManagerForm
       @submit="onFormSubmit"
+      class="rounded-sm border rounded-md border-solid border-gray-400 p-2 mb-4"
+    />
+
+    <FilterForm
+      @submit="onFilterFormSubmit"
       class="rounded-sm border rounded-md border-solid border-gray-400 p-2 mb-4"
     />
 
