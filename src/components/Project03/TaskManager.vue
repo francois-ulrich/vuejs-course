@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import TaskManagerForm from "./Components/TaskManagerForm.vue";
 import TaskItem from "./Components/TaskItem.vue";
 import type { TaskItemData } from "./Types/TaskItemData";
@@ -9,7 +9,16 @@ import FilterForm from "./Components/FilterForm.vue";
 
 const localStorageItemKey = "taskItems";
 
-let items = ref<TaskItemData[]>([]);
+const items = ref<TaskItemData[]>([]);
+const filter = ref<string>("");
+
+const filteredItems = computed<TaskItemData[]>(() =>
+  items.value.filter(
+    (item) =>
+      filter.value === "" ||
+      item.taskName.toLowerCase().includes(filter.value.toLowerCase())
+  )
+);
 
 function onFormSubmit(formData: TaskManagerFormData) {
   const newItem = {
@@ -21,8 +30,14 @@ function onFormSubmit(formData: TaskManagerFormData) {
   items.value.push(newItem);
 }
 
-function onFilterFormSubmit(filterValue: string) {
-  console.log(filterValue);
+function onFilterValueChange(filterValue: string) {
+  filter.value = filterValue;
+
+  var a = items.value.filter(
+    (item) =>
+      filter.value === "" ||
+      item.taskName.toLowerCase().includes(filter.value.toLowerCase())
+  );
 }
 
 function onItemDelete(itemId: string) {
@@ -51,20 +66,22 @@ watch(
 </script>
 
 <template>
-  <div class="p-4">
+  <div class="p-4 max-w-3xl">
     <TaskManagerForm
       @submit="onFormSubmit"
       class="rounded-sm border rounded-md border-solid border-gray-400 p-2 mb-4"
     />
 
     <FilterForm
-      @submit="onFilterFormSubmit"
+      :value="filter"
+      v-model="filter"
+      @update:filter="onFilterValueChange"
       class="rounded-sm border rounded-md border-solid border-gray-400 p-2 mb-4"
     />
 
     <div>
       <ul class="flex flex-col gap-4">
-        <li v-for="(item, index) in items" :key="index">
+        <li v-for="(item, index) in filteredItems" :key="index">
           <TaskItem :data="item" @delete="onItemDelete"></TaskItem>
         </li>
       </ul>

@@ -34,7 +34,7 @@ onMounted(() => {
         name="taskName"
         v-model="form.taskName"
         ref="taskNameInputRef"
-        class="rounded-sm border border-solid border-gray-400 ml-2"
+        class="rounded-sm border border-solid border-gray-400 ml-2 p-1"
       />
     </div>
 
@@ -44,7 +44,7 @@ onMounted(() => {
         id="priority"
         name="priority"
         v-model="form.priority"
-        class="rounded-sm border border-solid border-gray-400 ml-2"
+        class="rounded-sm border border-solid border-gray-400 ml-2 p-1"
       >
         <option disabled :value="null">Please select a priority</option>
         <option v-for="option in TaskItemPriority" :value="option">

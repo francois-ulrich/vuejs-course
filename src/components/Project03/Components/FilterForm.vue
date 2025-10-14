@@ -1,29 +1,36 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import { debounce } from "lodash";
 
-let filter = ref<string>("");
+interface Props {
+  value: string;
+}
+
+const props = defineProps<Props>();
+let localFilterValue = ref<string>(props.value);
 
 const emit = defineEmits<{
-  submit: [value: string];
+  (e: "update:filter", value: string): void;
 }>();
 
-function onSubmit() {
-  if (filter.value === "") return;
-  emit("submit", filter.value);
-}
+const debouncedSearch = debounce((value: string) => {
+  emit("update:filter", value);
+}, 300);
+
+watch(localFilterValue, (newValue) => {
+  debouncedSearch(newValue);
+});
 </script>
 <template>
-  <form @submit.prevent="onSubmit" class="flex flex-col gap-2">
-    <div>
-      <label for="taskName">Filter :</label>
-      <input
-        type="text"
-        id="taskName"
-        name="taskName"
-        v-model="filter"
-        ref="filterInputRef"
-        class="rounded-sm border border-solid border-gray-400 ml-2"
-      />
-    </div>
-  </form>
+  <div>
+    <label for="taskName">Filter :</label>
+    <input
+      type="text"
+      id="taskName"
+      name="taskName"
+      v-model="localFilterValue"
+      ref="filterInputRef"
+      class="rounded-sm border border-solid border-gray-400 ml-2 p-1"
+    />
+  </div>
 </template>
