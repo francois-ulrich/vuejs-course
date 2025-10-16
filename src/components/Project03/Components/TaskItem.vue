@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, ref } from "vue";
 import type { TaskItemData } from "../Types/TaskItemData";
 import { TaskItemPriority } from "../Types/TaskItemPriority";
 
@@ -6,12 +7,20 @@ interface Props {
   data: TaskItemData;
 }
 
+const isDone = ref<boolean>(false);
+
 const emit = defineEmits<{
   delete: [id: string];
 }>();
 
+const checkboxInputId = computed(() => `checkbox-${props.data.id}`);
+
 function handleDelete() {
   emit("delete", props.data.id);
+}
+
+function onDoneToggle(e: Event) {
+  isDone.value = (e.target as HTMLInputElement).checked;
 }
 
 const props = defineProps<Props>();
@@ -30,7 +39,20 @@ const props = defineProps<Props>();
       }"
     ></div>
     <div class="flex flex-row flex-grow p-3">
-      <p class="text-black leading-none">{{ props.data.taskName }}</p>
+      <input
+        :id="checkboxInputId"
+        type="checkbox"
+        :checked="props.data.isDone"
+        @change="onDoneToggle"
+        class="mr-2"
+      />
+      <label
+        class="text-black leading-none cursor-pointer"
+        :class="{ 'line-through': isDone, 'text-gray-400': isDone }"
+        :for="checkboxInputId"
+      >
+        {{ props.data.taskName }}
+      </label>
     </div>
     <div class="flex flex-shrink items-center">
       <button

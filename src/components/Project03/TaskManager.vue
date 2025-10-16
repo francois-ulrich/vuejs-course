@@ -25,6 +25,7 @@ function onFormSubmit(formData: TaskManagerFormData) {
     id: uuidv4(),
     taskName: formData.taskName,
     priority: formData.priority,
+    isDone: false,
   };
 
   items.value.push(newItem);
@@ -32,12 +33,6 @@ function onFormSubmit(formData: TaskManagerFormData) {
 
 function onFilterValueChange(filterValue: string) {
   filter.value = filterValue;
-
-  var a = items.value.filter(
-    (item) =>
-      filter.value === "" ||
-      item.taskName.toLowerCase().includes(filter.value.toLowerCase())
-  );
 }
 
 function onItemDelete(itemId: string) {
@@ -81,7 +76,7 @@ watch(
 
     <div>
       <ul class="flex flex-col gap-4">
-        <li v-for="(item, index) in filteredItems" :key="index">
+        <li v-for="item in filteredItems" :key="item.id">
           <TaskItem :data="item" @delete="onItemDelete"></TaskItem>
         </li>
       </ul>
