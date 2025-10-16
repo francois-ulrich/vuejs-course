@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onBeforeMount, ref, watch } from "vue";
 import TaskManagerForm from "./Components/TaskManagerForm.vue";
 import TaskItem from "./Components/TaskItem.vue";
 import type { TaskItemData } from "./Types/TaskItemData";
@@ -39,7 +39,15 @@ function onItemDelete(itemId: string) {
   items.value = items.value.filter((item) => item.id != itemId);
 }
 
-onMounted(() => {
+function onItemIsDoneFlagChange(itemId: string, isDone: boolean) {
+  const itemToChange = items.value.find((item) => itemId === item.id);
+
+  if (!itemToChange) return;
+
+  itemToChange.isDone = isDone;
+}
+
+onBeforeMount(() => {
   const localStorageData = localStorage.getItem(localStorageItemKey);
 
   if (localStorageData === null) return;
@@ -75,11 +83,21 @@ watch(
     />
 
     <div>
-      <ul class="flex flex-col gap-4">
+      <div v-if="items.length > 0 && filteredItems.length === 0">
+        <p>There are no tasks that match this filter !</p>
+      </div>
+      <ul class="flex flex-col gap-4" v-else-if="filteredItems.length > 0">
         <li v-for="item in filteredItems" :key="item.id">
-          <TaskItem :data="item" @delete="onItemDelete"></TaskItem>
+          <TaskItem
+            :data="item"
+            @delete="onItemDelete"
+            @change="onItemIsDoneFlagChange"
+          ></TaskItem>
         </li>
       </ul>
+      <div v-else>
+        <p>No tasks added yet. Add some !</p>
+      </div>
     </div>
   </div>
 </template>

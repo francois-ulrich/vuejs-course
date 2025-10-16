@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import TaskManager from "./components/Project03/TaskManager.vue";
+import EventBookingRoot from "./components/Project04/EventBookingRoot.vue";
 </script>
 
 <template>
-  <TaskManager />
+  <EventBookingRoot />
 </template>

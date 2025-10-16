@@ -7,10 +7,13 @@ interface Props {
   data: TaskItemData;
 }
 
-const isDone = ref<boolean>(false);
+const props = defineProps<Props>();
+
+const isDone = ref<boolean>(props.data.isDone);
 
 const emit = defineEmits<{
   delete: [id: string];
+  change: [id: string, isDone: boolean];
 }>();
 
 const checkboxInputId = computed(() => `checkbox-${props.data.id}`);
@@ -19,11 +22,10 @@ function handleDelete() {
   emit("delete", props.data.id);
 }
 
-function onDoneToggle(e: Event) {
+function handleIsDoneFlagChange(e: Event) {
   isDone.value = (e.target as HTMLInputElement).checked;
+  emit("change", props.data.id, isDone.value);
 }
-
-const props = defineProps<Props>();
 </script>
 
 <template>
@@ -43,7 +45,7 @@ const props = defineProps<Props>();
         :id="checkboxInputId"
         type="checkbox"
         :checked="props.data.isDone"
-        @change="onDoneToggle"
+        @change="handleIsDoneFlagChange"
         class="mr-2"
       />
       <label

@@ -17,6 +17,7 @@ const emit = defineEmits<{
 function onSubmit() {
   if (form.value.taskName === "" || form.value.priority === null) return;
   emit("submit", form.value);
+  form.value.taskName = "";
 }
 
 onMounted(() => {
