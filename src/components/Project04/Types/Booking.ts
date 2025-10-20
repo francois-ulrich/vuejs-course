@@ -1,6 +1,6 @@
-import type { ApiEvent } from "./ApiEvent";
+import type { Event } from "./Event";
 
 export interface Booking {
   id: string;
-  eventItem: ApiEvent;
+  event: Event | undefined;
 }

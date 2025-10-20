@@ -2,8 +2,14 @@
 import Button from "../../shared/Components/Button.vue";
 import RoundedCard from "../../shared/Components/RoundedCard.vue";
 
+interface Props {
+  id: string;
+}
+
+const props = defineProps<Props>();
+
 function handleRegister() {
-  console.log("ah");
+  console.log(props.id);
 }
 </script>
 
@@ -22,7 +28,6 @@ function handleRegister() {
         <div class="mb-4">
           <p><slot></slot></p>
         </div>
-
         <Button @click="handleRegister">Register</Button>
       </footer>
     </div>
