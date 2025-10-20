@@ -1,0 +1,40 @@
+{
+  "events": [
+    {
+      "id": "1",
+      "title": "Vue Conference 2024",
+      "date": "2025-10-15T07:22:58.883Z",
+      "description": "Conference about Vue and JavaScript"
+    },
+    {
+      "id": "2",
+      "title": "Vue Conference 2024 2",
+      "date": "2025-10-16T07:22:58.883Z",
+      "description": "Conference about Vue and JavaScript"
+    },
+    {
+      "id": "3",
+      "title": "Vue Conference 2024 3",
+      "date": "2025-10-17T07:22:58.883Z",
+      "description": "Conference about Vue and JavaScript"
+    },
+    {
+      "id": "4",
+      "title": "Vue Conference 2024 4",
+      "date": "2025-10-18T07:22:58.883Z",
+      "description": "Conference about Vue and JavaScript"
+    },
+    {
+      "id": "5",
+      "title": "Vue Conference 2024 5",
+      "date": "2025-10-19T07:22:58.883Z",
+      "description": "Conference about Vue and JavaScript"
+    },
+    {
+      "id": "6",
+      "title": "Vue Conference 2024 6",
+      "date": "2025-10-20T07:22:58.883Z",
+      "description": "Conference about Vue and JavaScript"
+    }
+  ]
+}

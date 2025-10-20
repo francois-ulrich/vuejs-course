@@ -1,57 +1,34 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
-import type { Booking } from "./Types/Booking";
-import type { Event } from "./Types/Event";
-import type { EventBooking } from "./Types/EventBooking";
-import EventItem from "./Components/EventItem.vue";
-import BookingItem from "./Components/BookingItem.vue";
-import { loadFromLocalStorage } from "../../util/loadFromLocalStorage";
+import EventItem from "./components/EventItem.vue";
+import BookingItem from "./components/BookingItem.vue";
+import { fetchEvents } from "./services/eventsService";
+import type { Event } from "./types/Event";
+import type { Booking } from "./types/Booking";
 
-const localStorageItemKey = "eventBookings";
-const data = ref<EventBooking>();
+const data = ref<{ events: Event[]; bookings: Booking[] }>({
+  events: [],
+  bookings: [],
+});
 
-onBeforeMount(() => {
-  data.value = loadFromLocalStorage<EventBooking>(localStorageItemKey, {
-    events: [
-      {
-        id: "1",
-        title: "Vue Conference 2024",
-        date: new Date(),
-        description: "Conference about Vue and JavaScript",
-      },
-      {
-        id: "2",
-        title: "Vue Conference 2024 2",
-        date: new Date(),
-        description: "Conference about Vue and JavaScript",
-      },
-      {
-        id: "3",
-        title: "Vue Conference 2024 3",
-        date: new Date(),
-        description: "Conference about Vue and JavaScript",
-      },
-      {
-        id: "4",
-        title: "Vue Conference 2024 4",
-        date: new Date(),
-        description: "Conference about Vue and JavaScript",
-      },
-      {
-        id: "5",
-        title: "Vue Conference 2024 5",
-        date: new Date(),
-        description: "Conference about Vue and JavaScript",
-      },
-      {
-        id: "6",
-        title: "Vue Conference 2024 6",
-        date: new Date(),
-        description: "Conference about Vue and JavaScript",
-      },
-    ],
-    bookings: [],
-  });
+onBeforeMount(async () => {
+  try {
+    const apiEvents = await fetchEvents();
+    data.value.events = apiEvents.map((apiEvent) => {
+      const { id, title, date, description } = apiEvent;
+
+      return {
+        id,
+        title,
+        date: new Date(date),
+        description,
+      };
+    });
+
+    console.log(data.value.events);
+  } catch (err) {
+    console.log(err);
+  }
 });
 </script>
 
@@ -81,17 +58,17 @@ onBeforeMount(() => {
       <!-- <li v-for="booking in data.bookings" :key="booking.id"> -->
       <li :key="1">
         <BookingItem>
-          <template v-slot:title>Booking</template>
+          <template #title>Booking</template>
         </BookingItem>
       </li>
       <li :key="2">
         <BookingItem>
-          <template v-slot:title>Booking</template>
+          <template #title>Booking</template>
         </BookingItem>
       </li>
       <li :key="3">
         <BookingItem>
-          <template v-slot:title>Booking</template>
+          <template #title>Booking</template>
         </BookingItem>
       </li>
     </ul>
