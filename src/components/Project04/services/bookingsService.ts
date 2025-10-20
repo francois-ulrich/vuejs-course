@@ -1,13 +1,28 @@
 import type { ApiBooking } from "../types/ApiBooking";
+import type { Event } from "../types/Event";
 
 export async function fetchAllBookings(): Promise<ApiBooking[]> {
   const response = await fetch(`${import.meta.env.VITE_API_URL}/bookings`);
-  if (!response.ok) throw new Error("Error when loading bookings");
+  if (!response.ok) throw new Error("Error when getting bookings");
   return await response.json();
 }
 
-// const addBooking = async (booking: Booking) => {
+export const addBooking = async (event: Event): Promise<ApiBooking | null> => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}/bookings`, {
+    method: "POST",
+    body: JSON.stringify({
+      eventId: event.id,
+    }),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+    },
+  });
 
-// };
+  if (!response.ok) {
+    throw new Error(`Error when posting new booking : (${response.status})`);
+  }
+
+  return (await response.json()) as ApiBooking;
+};
 
 // const removeBooking = async (bookingId: string) => {};

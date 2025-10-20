@@ -6,6 +6,7 @@ import { fetchAllEvents } from "./services/eventsService";
 import { fetchAllBookings } from "./services/bookingsService";
 import type { Event } from "./types/Event";
 import type { Booking } from "./types/Booking";
+import LoadingEventItem from "./components/LoadingEventItem.vue";
 
 const data = ref<{ events: Event[]; bookings: Booking[] }>({
   events: [],
@@ -48,39 +49,35 @@ onBeforeMount(async () => {
 </script>
 <template>
   <div class="p-4">
-    <div v-if="isLoading">
-      <p>Loading...</p>
-    </div>
-    <div v-else>
-      <div class="flex flex-col gap-4" v-if="data">
-        <h1 class="text-4xl font-medium">Event Booking App</h1>
+    <div class="flex flex-col gap-4" v-if="data">
+      <h1 class="text-4xl font-medium">Event Booking App</h1>
 
-        <h2 class="text-2xl font-medium">All events</h2>
+      <h2 class="text-2xl font-medium">All events</h2>
 
+      <div v-if="!isLoading">
         <ul class="grid grid-cols-3 gap-4">
           <li v-for="event in data.events" :key="event.id">
-            <EventItem :id="event.id">
-              <template v-slot:header>
-                {{ event.title }}
-              </template>
-              <template v-slot:date>
-                {{ event.date.toLocaleDateString() }}
-              </template>
-              <p>{{ event.description }}</p>
-            </EventItem>
-          </li>
-        </ul>
-
-        <h2 class="text-2xl font-medium">Your bookings</h2>
-
-        <ul class="flex flex-col gap-4">
-          <li v-for="booking in data.bookings" :key="booking.id">
-            <BookingItem>
-              <template #title>{{ booking.event?.title }}</template>
-            </BookingItem>
+            <EventItem :event="event" :id="event.id" />
           </li>
         </ul>
       </div>
+      <div v-else>
+        <ul class="grid grid-cols-3 gap-4">
+          <li v-for="i in 6" :key="i">
+            <LoadingEventItem />
+          </li>
+        </ul>
+      </div>
+
+      <h2 class="text-2xl font-medium">Your bookings</h2>
+
+      <ul class="flex flex-col gap-4">
+        <li v-for="booking in data.bookings" :key="booking.id">
+          <BookingItem>
+            <template #title>{{ booking.event?.title }}</template>
+          </BookingItem>
+        </li>
+      </ul>
     </div>
   </div>
 </template>

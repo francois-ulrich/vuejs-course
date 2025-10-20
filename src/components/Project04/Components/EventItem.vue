@@ -1,35 +1,36 @@
 <script setup lang="ts">
 import Button from "../../shared/Components/Button.vue";
-import RoundedCard from "../../shared/Components/RoundedCard.vue";
+import { addBooking } from "../services/bookingsService";
+import type { Event } from "../types/Event";
+import EventCardTemplate from "./templates/EventCardTemplate.vue";
 
 interface Props {
-  id: string;
+  event: Event;
 }
 
 const props = defineProps<Props>();
 
-function handleRegister() {
-  console.log(props.id);
+async function handleRegister() {
+  const newBooking = await addBooking(props.event);
+  console.log(newBooking);
 }
 </script>
 
 <template>
-  <RoundedCard>
-    <div class="divide-y divide-gray-200">
-      <header>
-        <div class="block p-3">
-          <h3 class="text-lg font-semibold"><slot name="header"></slot></h3>
-        </div>
-      </header>
-      <main class="block p-3">
-        <p class="font-medium"><slot name="date"></slot></p>
-      </main>
-      <footer class="p-3">
-        <div class="mb-4">
-          <p><slot></slot></p>
-        </div>
-        <Button @click="handleRegister">Register</Button>
-      </footer>
+  <EventCardTemplate>
+    <template v-slot:header>
+      <div class="p-3">
+        <h3 class="text-lg font-semibold">{{ event.title }}</h3>
+      </div>
+    </template>
+    <template v-slot:date>
+      <div class="p-3">
+        <p class="font-medium">{{ event.date.toLocaleDateString() }}</p>
+      </div>
+    </template>
+    <div class="mb-4">
+      <p>{{ event.description }}</p>
     </div>
-  </RoundedCard>
+    <Button @click="handleRegister">Register</Button>
+  </EventCardTemplate>
 </template>

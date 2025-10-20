@@ -37,5 +37,46 @@
       "description": "Conference about Vue and JavaScript"
     }
   ],
-  "bookings": []
+  "bookings": [
+    {
+      "eventId": "1",
+      "id": 1
+    },
+    {
+      "eventId": "1",
+      "id": 2
+    },
+    {
+      "eventId": "6",
+      "id": 3
+    },
+    {
+      "eventId": "3",
+      "id": 4
+    },
+    {
+      "eventId": "2",
+      "id": 5
+    },
+    {
+      "eventId": "1",
+      "id": 6
+    },
+    {
+      "eventId": "6",
+      "id": 7
+    },
+    {
+      "eventId": "5",
+      "id": 8
+    },
+    {
+      "eventId": "4",
+      "id": 9
+    },
+    {
+      "eventId": "5",
+      "id": 10
+    }
+  ]
 }
