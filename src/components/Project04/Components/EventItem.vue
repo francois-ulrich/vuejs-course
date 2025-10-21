@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import Button from "../../shared/Components/Button.vue";
-import { addBooking } from "../services/bookingsService";
-import type { Event } from "../types/Event";
 import EventCardTemplate from "./templates/EventCardTemplate.vue";
+import type { Event } from "../types/Event";
 
 interface Props {
   event: Event;
@@ -10,9 +9,12 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const emit = defineEmits<{
+  register: [event: Event];
+}>();
+
 async function handleRegister() {
-  const newBooking = await addBooking(props.event);
-  console.log(newBooking);
+  emit("register", props.event);
 }
 </script>
 
@@ -20,16 +22,16 @@ async function handleRegister() {
   <EventCardTemplate>
     <template v-slot:header>
       <div class="p-3">
-        <h3 class="text-lg font-semibold">{{ event.title }}</h3>
+        <h3 class="text-lg font-semibold">{{ props.event.title }}</h3>
       </div>
     </template>
     <template v-slot:date>
       <div class="p-3">
-        <p class="font-medium">{{ event.date.toLocaleDateString() }}</p>
+        <p class="font-medium">{{ props.event.date.toLocaleDateString() }}</p>
       </div>
     </template>
     <div class="mb-4">
-      <p>{{ event.description }}</p>
+      <p>{{ props.event.description }}</p>
     </div>
     <Button @click="handleRegister">Register</Button>
   </EventCardTemplate>

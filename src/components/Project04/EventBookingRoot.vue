@@ -3,7 +3,11 @@ import { onBeforeMount, ref } from "vue";
 import EventItem from "./components/EventItem.vue";
 import BookingItem from "./components/BookingItem.vue";
 import { fetchAllEvents } from "./services/eventsService";
-import { fetchAllBookings } from "./services/bookingsService";
+import {
+  addBooking,
+  deleteBooking,
+  fetchAllBookings,
+} from "./services/bookingsService";
 import type { Event } from "./types/Event";
 import type { Booking } from "./types/Booking";
 import LoadingEventItem from "./components/LoadingEventItem.vue";
@@ -39,14 +43,22 @@ onBeforeMount(async () => {
         event: data.value.events.find((event) => event.id === eventId),
       };
     });
-    console.log(data.value.events);
   } catch (err) {
-    console.log(err);
+    console.error(err);
   } finally {
     isLoading.value = false;
   }
 });
+
+const handleEventRegister = (event: Event) => {
+  addBooking(event);
+};
+
+const handleBookingCancel = (booking: Booking) => {
+  deleteBooking(booking);
+};
 </script>
+
 <template>
   <div class="p-4">
     <div class="flex flex-col gap-4" v-if="data">
@@ -57,7 +69,7 @@ onBeforeMount(async () => {
       <div v-if="!isLoading">
         <ul class="grid grid-cols-3 gap-4">
           <li v-for="event in data.events" :key="event.id">
-            <EventItem :event="event" :id="event.id" />
+            <EventItem :event="event" @register="handleEventRegister" />
           </li>
         </ul>
       </div>
@@ -73,7 +85,7 @@ onBeforeMount(async () => {
 
       <ul class="flex flex-col gap-4">
         <li v-for="booking in data.bookings" :key="booking.id">
-          <BookingItem>
+          <BookingItem :booking="booking" @cancel="handleBookingCancel">
             <template #title>{{ booking.event?.title }}</template>
           </BookingItem>
         </li>

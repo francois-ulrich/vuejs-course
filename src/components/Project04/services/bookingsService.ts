@@ -1,4 +1,5 @@
 import type { ApiBooking } from "../types/ApiBooking";
+import type { Booking } from "../types/Booking";
 import type { Event } from "../types/Event";
 
 export async function fetchAllBookings(): Promise<ApiBooking[]> {
@@ -25,4 +26,21 @@ export const addBooking = async (event: Event): Promise<ApiBooking | null> => {
   return (await response.json()) as ApiBooking;
 };
 
-// const removeBooking = async (bookingId: string) => {};
+export const deleteBooking = async (booking: Booking): Promise<boolean> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/bookings/${booking.id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    console.error(`Error when posting new booking : (${response.status})`);
+    return false;
+  }
+
+  return true;
+};
