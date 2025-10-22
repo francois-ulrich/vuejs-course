@@ -37,5 +37,10 @@
       "description": "Conference about Vue and JavaScript"
     }
   ],
-  "bookings": []
+  "bookings": [
+    {
+      "eventId": "1",
+      "id": 1
+    }
+  ]
 }

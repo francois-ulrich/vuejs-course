@@ -11,18 +11,20 @@ import {
 import type { Event } from "./types/Event";
 import type { Booking } from "./types/Booking";
 import LoadingEventItem from "./components/LoadingEventItem.vue";
+import { BookingStatus } from "./types/BookingStatus";
+import LoadingBookingItem from "./components/LoadingBookingItem.vue";
 
 const data = ref<{ events: Event[]; bookings: Booking[] }>({
   events: [],
   bookings: [],
 });
 
-const isLoading = ref<boolean>(true);
+const isLoadingEvents = ref<boolean>(true);
+const isLoadingBookings = ref<boolean>(true);
 
-onBeforeMount(async () => {
+const fetchEvents = async () => {
   try {
     const apiEvents = await fetchAllEvents();
-    const apiBookings = await fetchAllBookings();
 
     data.value.events = apiEvents.map((apiEvent) => {
       const { id, title, date, description } = apiEvent;
@@ -34,6 +36,16 @@ onBeforeMount(async () => {
         description,
       };
     });
+  } catch (err) {
+    console.error(err);
+  } finally {
+    isLoadingEvents.value = false;
+  }
+};
+
+const fetchBookings = async () => {
+  try {
+    const apiBookings = await fetchAllBookings();
 
     data.value.bookings = apiBookings.map((apiBooking) => {
       const { id, eventId } = apiBooking;
@@ -41,13 +53,19 @@ onBeforeMount(async () => {
       return {
         id,
         event: data.value.events.find((event) => event.id === eventId),
+        status: BookingStatus.Pending,
       };
     });
   } catch (err) {
     console.error(err);
   } finally {
-    isLoading.value = false;
+    isLoadingBookings.value = false;
   }
+};
+
+onBeforeMount(async () => {
+  fetchEvents();
+  fetchBookings();
 });
 
 const handleEventRegister = (event: Event) => {
@@ -66,7 +84,7 @@ const handleBookingCancel = (booking: Booking) => {
 
       <h2 class="text-2xl font-medium">All events</h2>
 
-      <div v-if="!isLoading">
+      <div v-if="!isLoadingEvents">
         <ul class="grid grid-cols-3 gap-4">
           <li v-for="event in data.events" :key="event.id">
             <EventItem :event="event" @register="handleEventRegister" />
@@ -83,13 +101,27 @@ const handleBookingCancel = (booking: Booking) => {
 
       <h2 class="text-2xl font-medium">Your bookings</h2>
 
-      <ul class="flex flex-col gap-4">
-        <li v-for="booking in data.bookings" :key="booking.id">
-          <BookingItem :booking="booking" @cancel="handleBookingCancel">
-            <template #title>{{ booking.event?.title }}</template>
-          </BookingItem>
-        </li>
-      </ul>
+      <div v-if="!isLoadingBookings">
+        <div v-if="data.bookings.length > 0">
+          <ul class="flex flex-col gap-4">
+            <li v-for="booking in data.bookings" :key="booking.id">
+              <BookingItem :booking="booking" @cancel="handleBookingCancel">
+                <template #title>{{ booking.event?.title }}</template>
+              </BookingItem>
+            </li>
+          </ul>
+        </div>
+        <div v-else>
+          <p class="text-gray-500">No bookings yet !</p>
+        </div>
+      </div>
+      <div v-else>
+        <ul class="flex flex-col gap-4">
+          <li v-for="i in 3" :key="i">
+            <LoadingBookingItem />
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
