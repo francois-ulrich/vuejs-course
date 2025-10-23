@@ -11,7 +11,6 @@ import {
 import type { Event } from "./types/Event";
 import type { Booking } from "./types/Booking";
 import LoadingEventItem from "./components/LoadingEventItem.vue";
-import { BookingStatus } from "./types/BookingStatus";
 import LoadingBookingItem from "./components/LoadingBookingItem.vue";
 
 const data = ref<{ events: Event[]; bookings: Booking[] }>({
@@ -50,10 +49,12 @@ const fetchBookings = async () => {
     data.value.bookings = apiBookings.map((apiBooking) => {
       const { id, eventId } = apiBooking;
 
+      const event = data.value.events.find((event) => event.id === eventId);
+
       return {
         id,
-        event: data.value.events.find((event) => event.id === eventId),
-        status: BookingStatus.Pending,
+        event,
+        status: "Success",
       };
     });
   } catch (err) {
@@ -68,12 +69,63 @@ onBeforeMount(async () => {
   fetchBookings();
 });
 
-const handleEventRegister = (event: Event) => {
-  addBooking(event);
+const handleEventRegister = async (event: Event) => {
+  if (
+    data.value.bookings.some(
+      (booking) => booking.event && booking.event.id === event.id
+    )
+  ) {
+    return;
+  }
+
+  const tempBooking: Booking = {
+    id: "",
+    event: event,
+    status: "Pending",
+  };
+
+  try {
+    data.value.bookings.push(tempBooking);
+
+    const result = await addBooking(event);
+
+    if (result === null)
+      throw new Error(
+        "Error when registering booking : No booking returned from API"
+      );
+
+    const tempBookingIndex = data.value.bookings.indexOf(tempBooking);
+
+    const { id } = result;
+
+    data.value.bookings[tempBookingIndex] = {
+      id,
+      event,
+      status: "Success",
+    };
+  } catch {
+    const tempBookingIndex = data.value.bookings.indexOf(tempBooking);
+
+    data.value.bookings[tempBookingIndex] = {
+      id: "",
+      event,
+      status: "Failed",
+    };
+  }
 };
 
-const handleBookingCancel = (booking: Booking) => {
-  deleteBooking(booking);
+const handleBookingCancel = async (bookingToDelete: Booking) => {
+  const bookingIndex = data.value.bookings.indexOf(bookingToDelete);
+
+  try {
+    data.value.bookings = data.value.bookings.filter(
+      (booking) => booking.id != bookingToDelete.id
+    );
+
+    await deleteBooking(bookingToDelete);
+  } catch {
+    data.value.bookings.splice(bookingIndex, 0, bookingToDelete);
+  }
 };
 </script>
 

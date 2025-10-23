@@ -21,11 +21,14 @@ const handleCancelButtonClick = () => {
 <template>
   <BookingCardTemplate>
     <template v-slot:left-side>
-      <p>
-        <slot name="title" v-if="props.booking.event">
-          {{ props.booking.event.title }}
-        </slot>
-        - Status : {{ props.booking.status }}
+      <p v-if="props.booking.event">
+        {{ props.booking.event.title }}
+        - Status :
+        {{
+          props.booking.status === "Success"
+            ? "Success !"
+            : props.booking.status
+        }}
       </p>
     </template>
     <template v-slot:right-side>

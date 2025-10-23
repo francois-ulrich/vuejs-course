@@ -38,8 +38,7 @@ export const deleteBooking = async (booking: Booking): Promise<boolean> => {
   );
 
   if (!response.ok) {
-    console.error(`Error when posting new booking : (${response.status})`);
-    return false;
+    throw new Error(`Error when deleting booking : (${response.status})`);
   }
 
   return true;
