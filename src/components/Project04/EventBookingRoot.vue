@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
-import EventItem from "./components/EventItem.vue";
+import { ref } from "vue";
 import BookingItem from "./components/BookingItem.vue";
-import { fetchAllEvents } from "./services/eventsService";
+
 import {
   addBooking,
   deleteBooking,
@@ -10,46 +9,26 @@ import {
 } from "./services/bookingsService";
 import type { Event } from "./types/Event";
 import type { Booking } from "./types/Booking";
-import LoadingEventItem from "./components/LoadingEventItem.vue";
 import LoadingBookingItem from "./components/LoadingBookingItem.vue";
+import EventList from "./components/EventList.vue";
 
-const data = ref<{ events: Event[]; bookings: Booking[] }>({
-  events: [],
-  bookings: [],
-});
+const bookings = ref<Booking[]>([]);
 
-const isLoadingEvents = ref<boolean>(true);
 const isLoadingBookings = ref<boolean>(true);
 
-const fetchEvents = async () => {
-  try {
-    const apiEvents = await fetchAllEvents();
-
-    data.value.events = apiEvents.map((apiEvent) => {
-      const { id, title, date, description } = apiEvent;
-
-      return {
-        id,
-        title,
-        date: new Date(date),
-        description,
-      };
-    });
-  } catch (err) {
-    console.error(err);
-  } finally {
-    isLoadingEvents.value = false;
-  }
-};
-
-const fetchBookings = async () => {
+const fetchBookings = async (events: Event[]) => {
   try {
     const apiBookings = await fetchAllBookings();
 
-    data.value.bookings = apiBookings.map((apiBooking) => {
+    const apiBookingsWithExistingEvents = apiBookings.filter(
+      (apiBooking) =>
+        events.find((event) => event.id === apiBooking.eventId) != null
+    );
+
+    bookings.value = apiBookingsWithExistingEvents.map((apiBooking) => {
       const { id, eventId } = apiBooking;
 
-      const event = data.value.events.find((event) => event.id === eventId);
+      const event = events.find((event) => event.id === eventId);
 
       return {
         id,
@@ -64,14 +43,9 @@ const fetchBookings = async () => {
   }
 };
 
-onBeforeMount(async () => {
-  fetchEvents();
-  fetchBookings();
-});
-
-const handleEventRegister = async (event: Event) => {
+const handleBookingCreation = async (event: Event) => {
   if (
-    data.value.bookings.some(
+    bookings.value.some(
       (booking) => booking.event && booking.event.id === event.id
     )
   ) {
@@ -85,7 +59,7 @@ const handleEventRegister = async (event: Event) => {
   };
 
   try {
-    data.value.bookings.push(tempBooking);
+    bookings.value.push(tempBooking);
 
     const result = await addBooking(event);
 
@@ -94,19 +68,19 @@ const handleEventRegister = async (event: Event) => {
         "Error when registering booking : No booking returned from API"
       );
 
-    const tempBookingIndex = data.value.bookings.indexOf(tempBooking);
+    const tempBookingIndex = bookings.value.indexOf(tempBooking);
 
     const { id } = result;
 
-    data.value.bookings[tempBookingIndex] = {
+    bookings.value[tempBookingIndex] = {
       id,
       event,
       status: "Success",
     };
   } catch {
-    const tempBookingIndex = data.value.bookings.indexOf(tempBooking);
+    const tempBookingIndex = bookings.value.indexOf(tempBooking);
 
-    data.value.bookings[tempBookingIndex] = {
+    bookings.value[tempBookingIndex] = {
       id: "",
       event,
       status: "Failed",
@@ -114,50 +88,42 @@ const handleEventRegister = async (event: Event) => {
   }
 };
 
-const handleBookingCancel = async (bookingToDelete: Booking) => {
-  const bookingIndex = data.value.bookings.indexOf(bookingToDelete);
+const handleBookingDeletion = async (bookingToDelete: Booking) => {
+  const bookingIndex = bookings.value.indexOf(bookingToDelete);
 
   try {
-    data.value.bookings = data.value.bookings.filter(
+    bookings.value = bookings.value.filter(
       (booking) => booking.id != bookingToDelete.id
     );
 
     await deleteBooking(bookingToDelete);
   } catch {
-    data.value.bookings.splice(bookingIndex, 0, bookingToDelete);
+    bookings.value.splice(bookingIndex, 0, bookingToDelete);
   }
+};
+
+const onEventsFetch = (loadedEvents: Event[]) => {
+  fetchBookings(loadedEvents);
 };
 </script>
 
 <template>
   <div class="p-4">
-    <div class="flex flex-col gap-4" v-if="data">
+    <div class="flex flex-col gap-4">
       <h1 class="text-4xl font-medium">Event Booking App</h1>
 
-      <h2 class="text-2xl font-medium">All events</h2>
-
-      <div v-if="!isLoadingEvents">
-        <ul class="grid grid-cols-3 gap-4">
-          <li v-for="event in data.events" :key="event.id">
-            <EventItem :event="event" @register="handleEventRegister" />
-          </li>
-        </ul>
-      </div>
-      <div v-else>
-        <ul class="grid grid-cols-3 gap-4">
-          <li v-for="i in 6" :key="i">
-            <LoadingEventItem />
-          </li>
-        </ul>
-      </div>
+      <EventList
+        @eventRegistration="handleBookingCreation"
+        @eventsFetch="onEventsFetch"
+      />
 
       <h2 class="text-2xl font-medium">Your bookings</h2>
 
       <div v-if="!isLoadingBookings">
-        <div v-if="data.bookings.length > 0">
+        <div v-if="bookings.length > 0">
           <ul class="flex flex-col gap-4">
-            <li v-for="booking in data.bookings" :key="booking.id">
-              <BookingItem :booking="booking" @cancel="handleBookingCancel">
+            <li v-for="booking in bookings" :key="booking.id">
+              <BookingItem :booking="booking" @cancel="handleBookingDeletion">
                 <template #title>{{ booking.event?.title }}</template>
               </BookingItem>
             </li>
