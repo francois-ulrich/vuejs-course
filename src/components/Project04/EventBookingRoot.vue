@@ -1,106 +1,12 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import BookingItem from "./components/BookingItem.vue";
 
-import {
-  addBooking,
-  deleteBooking,
-  fetchAllBookings,
-} from "./services/bookingsService";
 import type { Event } from "./types/Event";
-import type { Booking } from "./types/Booking";
 import LoadingBookingItem from "./components/LoadingBookingItem.vue";
 import EventList from "./components/EventList.vue";
+import useBookings from "./composables/useBookings";
 
-const bookings = ref<Booking[]>([]);
-
-const isLoadingBookings = ref<boolean>(true);
-
-const fetchBookings = async (events: Event[]) => {
-  try {
-    const apiBookings = await fetchAllBookings();
-
-    const apiBookingsWithExistingEvents = apiBookings.filter(
-      (apiBooking) =>
-        events.find((event) => event.id === apiBooking.eventId) != null
-    );
-
-    bookings.value = apiBookingsWithExistingEvents.map((apiBooking) => {
-      const { id, eventId } = apiBooking;
-
-      const event = events.find((event) => event.id === eventId);
-
-      return {
-        id,
-        event,
-        status: "Success",
-      };
-    });
-  } catch (err) {
-    console.error(err);
-  } finally {
-    isLoadingBookings.value = false;
-  }
-};
-
-const handleBookingCreation = async (event: Event) => {
-  if (
-    bookings.value.some(
-      (booking) => booking.event && booking.event.id === event.id
-    )
-  ) {
-    return;
-  }
-
-  const tempBooking: Booking = {
-    id: "",
-    event: event,
-    status: "Pending",
-  };
-
-  try {
-    bookings.value.push(tempBooking);
-
-    const result = await addBooking(event);
-
-    if (result === null)
-      throw new Error(
-        "Error when registering booking : No booking returned from API"
-      );
-
-    const tempBookingIndex = bookings.value.indexOf(tempBooking);
-
-    const { id } = result;
-
-    bookings.value[tempBookingIndex] = {
-      id,
-      event,
-      status: "Success",
-    };
-  } catch {
-    const tempBookingIndex = bookings.value.indexOf(tempBooking);
-
-    bookings.value[tempBookingIndex] = {
-      id: "",
-      event,
-      status: "Failed",
-    };
-  }
-};
-
-const handleBookingDeletion = async (bookingToDelete: Booking) => {
-  const bookingIndex = bookings.value.indexOf(bookingToDelete);
-
-  try {
-    bookings.value = bookings.value.filter(
-      (booking) => booking.id != bookingToDelete.id
-    );
-
-    await deleteBooking(bookingToDelete);
-  } catch {
-    bookings.value.splice(bookingIndex, 0, bookingToDelete);
-  }
-};
+const { bookings, isLoadingBookings, fetchBookings } = useBookings();
 
 const onEventsFetch = (loadedEvents: Event[]) => {
   fetchBookings(loadedEvents);
@@ -112,10 +18,7 @@ const onEventsFetch = (loadedEvents: Event[]) => {
     <div class="flex flex-col gap-4">
       <h1 class="text-4xl font-medium">Event Booking App</h1>
 
-      <EventList
-        @eventRegistration="handleBookingCreation"
-        @eventsFetch="onEventsFetch"
-      />
+      <EventList @eventsFetch="onEventsFetch" />
 
       <h2 class="text-2xl font-medium">Your bookings</h2>
 
@@ -123,7 +26,7 @@ const onEventsFetch = (loadedEvents: Event[]) => {
         <div v-if="bookings.length > 0">
           <ul class="flex flex-col gap-4">
             <li v-for="booking in bookings" :key="booking.id">
-              <BookingItem :booking="booking" @cancel="handleBookingDeletion">
+              <BookingItem :booking="booking">
                 <template #title>{{ booking.event?.title }}</template>
               </BookingItem>
             </li>

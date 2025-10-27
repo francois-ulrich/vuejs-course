@@ -42,10 +42,6 @@ const fetchEvents = async () => {
   }
 };
 
-const handleEventRegistration = (event: Event) => {
-  emit("eventRegistration", event);
-};
-
 onBeforeMount(async () => {
   fetchEvents();
 });
@@ -60,12 +56,11 @@ const handleRetry = () => {
 
   <div v-if="state === 'Ok'">
     <div v-if="events.length > 0">
-      <ul class="grid grid-cols-3 gap-4">
+      <ul
+        class="grid grid-cols-3 gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+      >
         <li v-for="event in events" :key="event.id">
-          <EventItem
-            :event="event"
-            @register="handleEventRegistration(event)"
-          />
+          <EventItem :event="event" />
         </li>
       </ul>
     </div>
@@ -75,7 +70,7 @@ const handleRetry = () => {
   </div>
 
   <div v-if="state === 'Loading'">
-    <ul class="grid grid-cols-3 gap-4">
+    <ul class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <li v-for="i in 6" :key="i">
         <LoadingEventItem />
       </li>

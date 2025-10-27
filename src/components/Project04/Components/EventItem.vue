@@ -2,19 +2,21 @@
 import Button from "../../shared/Components/Button.vue";
 import EventCardTemplate from "./templates/EventCardTemplate.vue";
 import type { Event } from "../types/Event";
+import useBookings from "../composables/useBookings";
 
 interface Props {
   event: Event;
 }
-
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
   register: [event: Event];
 }>();
 
+const { handleBookingCreation } = useBookings();
+
 async function handleRegister() {
-  emit("register", props.event);
+  handleBookingCreation(props.event);
 }
 </script>
 
