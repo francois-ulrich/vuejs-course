@@ -45,10 +45,6 @@ const fetchEvents = async () => {
 onBeforeMount(async () => {
   fetchEvents();
 });
-
-const handleRetry = () => {
-  fetchEvents();
-};
 </script>
 
 <template>
@@ -80,7 +76,7 @@ const handleRetry = () => {
   <div v-if="state === 'Error'">
     <div class="flex items-center flex-col gap-4">
       <p class="inline-block">An error has occured. Try reloading the list !</p>
-      <Button @click="handleRetry" class="grow-0 w-32">Retry</Button>
+      <Button @click="fetchEvents" class="grow-0 w-32">Retry</Button>
     </div>
   </div>
 </template>

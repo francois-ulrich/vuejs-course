@@ -14,10 +14,6 @@ const emit = defineEmits<{
 }>();
 
 const { handleBookingCreation } = useBookings();
-
-async function handleRegister() {
-  handleBookingCreation(props.event);
-}
 </script>
 
 <template>
@@ -35,6 +31,6 @@ async function handleRegister() {
     <div class="mb-4">
       <p>{{ props.event.description }}</p>
     </div>
-    <Button @click="handleRegister">Register</Button>
+    <Button @click="handleBookingCreation(props.event)">Register</Button>
   </EventCardTemplate>
 </template>
