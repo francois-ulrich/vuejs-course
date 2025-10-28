@@ -12,7 +12,7 @@ const { fetchBookings } = useBookings();
       <h1 class="text-4xl font-medium">Event Booking App</h1>
 
       <EventList @eventsFetch="(loadedEvents) => fetchBookings(loadedEvents)" />
-      <BookingList/>
+      <BookingList />
     </div>
   </div>
 </template>

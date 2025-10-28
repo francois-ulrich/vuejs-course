@@ -1,49 +1,21 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount } from "vue";
 import EventItem from "./EventItem.vue";
 import LoadingEventItem from "./LoadingEventItem.vue";
-import { fetchAllEvents } from "../services/eventsService";
+import ErrorMessage from "./ErrorMessage.vue";
 import type { Event } from "../types/Event";
-import type { EventsListState } from "../types/EventsListState";
-import Button from "../../shared/Components/Button.vue";
 
-const events = ref<Event[]>([]);
-const isLoadingEvents = ref<boolean>(true);
-const state = ref<EventsListState>("None");
+import useEvents from "../composables/useEvents";
+
+const { events, state, fetchEvents } = useEvents();
 
 const emit = defineEmits<{
   eventsFetch: [events: Event[]];
-  eventRegistration: [event: Event];
 }>();
 
-const fetchEvents = async () => {
-  state.value = "Loading";
-
-  try {
-    const apiEvents = await fetchAllEvents();
-
-    events.value = apiEvents.map((apiEvent) => {
-      const { id, title, date, description } = apiEvent;
-
-      return {
-        id,
-        title,
-        date: new Date(date),
-        description,
-      };
-    });
-
-    state.value = "Ok";
-    emit("eventsFetch", events.value);
-  } catch (err) {
-    console.error(err);
-    state.value = "Error";
-    isLoadingEvents.value = false;
-  }
-};
-
 onBeforeMount(async () => {
-  fetchEvents();
+  await fetchEvents();
+  emit("eventsFetch", events.value);
 });
 </script>
 
@@ -74,9 +46,8 @@ onBeforeMount(async () => {
   </div>
 
   <div v-if="state === 'Error'">
-    <div class="flex items-center flex-col gap-4">
-      <p class="inline-block">An error has occured. Try reloading the list !</p>
-      <Button @click="fetchEvents" class="grow-0 w-32">Retry</Button>
-    </div>
+    <ErrorMessage :retry-handler="fetchEvents">
+      <p>An error has occured and the events couldn't be loaded</p>
+    </ErrorMessage>
   </div>
 </template>

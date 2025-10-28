@@ -6,12 +6,17 @@ import {
   deleteBooking,
   fetchAllBookings,
 } from "../services/bookingsService";
+import type { ItemListState } from "../types/ItemListState";
 
 const bookings = ref<Booking[]>([]);
 
 const isLoadingBookings = ref<boolean>(true);
 
+const state = ref<ItemListState>("None");
+
 const fetchBookings = async (events: Event[]) => {
+  state.value = "Loading";
+
   try {
     const apiBookings = await fetchAllBookings();
 
@@ -31,8 +36,11 @@ const fetchBookings = async (events: Event[]) => {
         status: "Success",
       };
     });
+
+    state.value = "Ok";
   } catch (err) {
     console.error(err);
+    state.value = "Error";
   } finally {
     isLoadingBookings.value = false;
   }
@@ -101,6 +109,7 @@ export default function useBookings() {
   return {
     bookings,
     isLoadingBookings,
+    state,
     fetchBookings,
     handleBookingCreation,
     handleBookingDeletion,
