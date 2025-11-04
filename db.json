@@ -39,20 +39,12 @@
   ],
   "bookings": [
     {
-      "eventId": "1",
-      "id": 1
-    },
-    {
-      "eventId": "2",
-      "id": 2
+      "eventId": "6",
+      "id": 5
     },
     {
       "eventId": "3",
-      "id": 3
-    },
-    {
-      "eventId": "1",
-      "id": 4
+      "id": 6
     }
   ]
 }

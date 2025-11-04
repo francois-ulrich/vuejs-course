@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import EventBookingRoot from "./components/Project04/EventBookingRoot.vue";
+import SettingsPage from "./components/Project05/SettingsPage.vue";
 </script>
 
 <template>
-  <EventBookingRoot />
+  <SettingsPage />
 </template>
