@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import RadioGroup from "../../shared/Components/RadioGroup.vue";
-import FormInput from "../../shared/Components/FormInput.vue";
-import { ref } from "vue";
+import TextInput from "../../shared/Components/TextInput.vue";
 import SelectInput from "../../shared/Components/SelectInput.vue";
 import useGeneralSettings from "../composables/useGeneralSettings";
 
@@ -23,18 +22,18 @@ const { generalSettings } = useGeneralSettings();
     <h1 class="text-2xl mb-4">General</h1>
 
     <form @submit.prevent="onSubmit" class="flex flex-col gap-4">
-      <FormInput
+      <TextInput
         id="username"
         label="Username"
         v-model="generalSettings.username"
       />
-      <FormInput
+      <TextInput
         id="email"
         label="Email adress"
         v-model="generalSettings.email"
         type="email"
       />
-      <FormInput
+      <TextInput
         id="aboutMe"
         label="About me"
         v-model="generalSettings.aboutMe"
