@@ -1,23 +1,34 @@
 <script setup lang="ts">
-import type { Tab } from "@/components/Project05/types/Tab";
 import { computed } from "vue";
+import type { Tab } from "../types/Tab";
 
-const props = defineProps<Tab>();
-
-defineEmits<{
-  click: void;
+const props = defineProps<{
+  tab: Tab;
+  activeTab: Tab | undefined;
 }>();
 
-const isActive = computed(() => props.name === props.activeTabName);
+const emit = defineEmits<{
+  click: [tab: Tab];
+}>();
+
+const isActive = computed(() => props.tab === props.activeTab);
 </script>
 
 <template>
   <div
     class="p-4 border-gray-300 border-b-2 cursor-pointer"
-    :class="{ 'border-blue-500': isActive }"
+    :class="{ 'border-b-blue-500': isActive }"
+    @click="
+      () => {
+        emit('click', props.tab);
+      }
+    "
   >
-    <p class="text-gray-500 font-medium" :class="{ 'text-blue-500': isActive }">
-      {{ props.label }}
+    <p
+      class="font-medium select-none"
+      :class="{ 'text-blue-500': isActive, 'text-gray-500': !isActive }"
+    >
+      {{ props.tab.label }}
     </p>
   </div>
 </template>
