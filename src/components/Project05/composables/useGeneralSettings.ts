@@ -1,21 +1,22 @@
 import { ref } from "vue";
+import { initializeLocalStorage, watchAndStore } from "../util";
+import type { GeneralSettings } from "../types/types";
 
-interface GeneralSettings {
-  username: string;
-  email: string;
-  aboutMe: string;
-  gender: string;
-  country: string;
-}
+const storageKey = "generalSettings";
 
-const generalSettings = ref<GeneralSettings>({
-  username: "MyUsername",
-  email: "test@gmail.com",
-  aboutMe:
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
-  gender: "",
-  country: "",
-});
+const generalSettings = ref<GeneralSettings>(
+  (() =>
+    initializeLocalStorage(storageKey, {
+      username: "MyUsername",
+      email: "test@gmail.com",
+      aboutMe:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod",
+      gender: "",
+      country: "",
+    }))()
+);
+
+watchAndStore(storageKey, generalSettings);
 
 export default function useGeneralSettings() {
   return {

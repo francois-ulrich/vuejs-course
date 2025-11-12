@@ -31,6 +31,7 @@ const value = computed({
           v-for="option in options"
           :key="option"
           :value="option.toLowerCase()"
+          
         >
           {{ option }}
         </option>

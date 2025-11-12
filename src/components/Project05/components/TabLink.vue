@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import type { Tab } from "../types/Tab";
+import type { Tab } from "../types/types";
 
 const props = defineProps<{
   tab: Tab;

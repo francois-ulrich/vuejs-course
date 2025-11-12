@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import BooleanInput from "../../shared/Components/BooleanInput.vue";
-import { ref } from "vue";
+import useNotificationSettings from "../composables/useNotificationSettings";
 
 const onSubmit = () => {
   console.log("submit");
 };
 
-const boolTest = ref<boolean | undefined>();
+const { notificationSettings } = useNotificationSettings();
 </script>
 
 <template>
@@ -16,7 +16,13 @@ const boolTest = ref<boolean | undefined>();
       <BooleanInput
         id="emailNotifications"
         label="Email notifications"
-        v-model="boolTest"
+        v-model="notificationSettings.email"
+      />
+
+      <BooleanInput
+        id="smsNotifications"
+        label="SMS notifications"
+        v-model="notificationSettings.sms"
       />
     </form>
   </div>

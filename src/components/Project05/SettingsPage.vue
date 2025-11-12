@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import { KeepAlive, markRaw, onBeforeMount, ref } from "vue";
 import TabLink from "./components/TabLink.vue";
-import type { Tab } from "./types/Tab";
-import General from "./components/General.vue";
-import Notifications from "./components/Notifications.vue";
-import Privacy from "./components/Privacy.vue";
+import GeneralSettings from "./components/GeneralSettings.vue";
+import NotificationsSettings from "./components/NotificationsSettings.vue";
+import PrivacySettings from "./components/PrivacySettings.vue";
 import FadeTransition from "./components/FadeTransition.vue";
 import "./main.css";
+import type { Tab } from "./types/types";
 
 const tabs = ref<Tab[]>([
-  { name: "general", label: "General", component: markRaw(General) },
+  { name: "general", label: "General", component: markRaw(GeneralSettings) },
   {
     name: "notifications",
     label: "Notifications",
-    component: markRaw(Notifications),
+    component: markRaw(NotificationsSettings),
   },
-  { name: "privacy", label: "Privacy", component: markRaw(Privacy) },
+  { name: "privacy", label: "Privacy", component: markRaw(PrivacySettings) },
 ]);
 
 const currentTab = ref<Tab>();
