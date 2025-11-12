@@ -7,6 +7,7 @@ import PrivacySettings from "./components/PrivacySettings.vue";
 import FadeTransition from "./components/FadeTransition.vue";
 import "./main.css";
 import type { Tab } from "./types/types";
+import NotificationsList from "./components/NotificationsList.vue";
 
 const tabs = ref<Tab[]>([
   { name: "general", label: "General", component: markRaw(GeneralSettings) },
@@ -46,6 +47,10 @@ onBeforeMount(() => {
         </KeepAlive>
       </FadeTransition>
     </div>
+
+    <hr />
+
+    <NotificationsList />
   </main>
 </template>
 

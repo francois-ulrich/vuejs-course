@@ -24,9 +24,7 @@ onBeforeMount(async () => {
 
   <div v-if="state === 'Ok'">
     <div v-if="events.length > 0">
-      <ul
-        class="grid grid-cols-3 gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-      >
+      <ul class="grid grid-cols-3 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <li v-for="event in events" :key="event.id">
           <EventItem :event="event" />
         </li>

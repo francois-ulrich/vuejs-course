@@ -3,12 +3,15 @@ import RadioGroup from "../../shared/Components/RadioGroup.vue";
 import TextInput from "../../shared/Components/TextInput.vue";
 import SelectInput from "../../shared/Components/SelectInput.vue";
 import useGeneralSettings from "../composables/useGeneralSettings";
+import useNotifications from "../composables/useNotifications";
 
 type Gender = "Male" | "Female" | "Other";
 type Country = "France" | "United States";
 
+const {addNotification} = useNotifications();
+
 const onSubmit = () => {
-  console.log("submit");
+  addNotification("General settings have been updated");
 };
 
 const genderOptions: Gender[] = ["Male", "Female", "Other"];
@@ -51,6 +54,8 @@ const { generalSettings } = useGeneralSettings();
         v-model="generalSettings.country"
         :options="countryOptions"
       />
+
+      <input type="submit" class="btn-primary cursor-pointer" value="Submit"></input>
     </form>
   </div>
 </template>

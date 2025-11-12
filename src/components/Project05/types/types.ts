@@ -33,3 +33,8 @@ export interface SettingsMap {
 }
 
 export type SettingsKey = keyof SettingsMap;
+
+export interface Notification {
+  id: string;
+  message: string;
+}
