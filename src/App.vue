@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import SettingsPage from "./components/Project05/SettingsPage.vue";
+import Project06 from "./components/Project06/Project06.vue";
 </script>
 
 <template>
-  <SettingsPage />
+
+  <Project06 />
 </template>
