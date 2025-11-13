@@ -12,7 +12,12 @@ const routes = [
     component: HomeView,
   },
   {
+    path: "/project06/home",
+    redirect: "/project06",
+  },
+  {
     path: "/project06/favorites",
+    alias: "/project06/favourites",
     name: "favorites",
     component: FavoritesView,
   },

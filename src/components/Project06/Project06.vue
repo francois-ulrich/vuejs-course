@@ -8,7 +8,7 @@ import { RouterView } from "vue-router";
   <nav class="flex gap-4 border-b pb-2 mb-4">
     <RouterLink :to="{ name: 'home' }">Home</RouterLink>
     <RouterLink :to="{ name: 'favorites' }">Favorites</RouterLink>
-    <RouterLink :to="{ name: 'recipe', params: { id: 1 } }"
+    <!-- <RouterLink :to="{ name: 'recipe', params: { id: 1 } }"
       >Recipe 1</RouterLink
     >
     <RouterLink :to="{ name: 'recipe', params: { id: 2 } }"
@@ -16,7 +16,7 @@ import { RouterView } from "vue-router";
     >
     <RouterLink :to="{ name: 'recipe', params: { id: 3 } }"
       >Recipe 3</RouterLink
-    >
+    > -->
     <RouterLink :to="{ name: 'add-recipe' }">Add recipe</RouterLink>
   </nav>
 
