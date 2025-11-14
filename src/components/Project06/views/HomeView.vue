@@ -4,10 +4,15 @@ import { useRecipeStore } from "../stores/recipe";
 import { computed, ref } from "vue";
 
 const { filteredRecipes } = useRecipeStore();
+const a = useRecipeStore();
+console.log(a.secret);
 
 const searchQuery = ref<string>("");
 
 const recipeItems = computed(() => filteredRecipes(searchQuery.value));
+
+// const store = useStore();
+// store.secret // 'the cake is a lie'
 </script>
 
 <template>
