@@ -4,8 +4,6 @@ import { useRecipeStore } from "../stores/recipe";
 import { computed, ref } from "vue";
 
 const { filteredRecipes } = useRecipeStore();
-const a = useRecipeStore();
-console.log(a.secret);
 
 const searchQuery = ref<string>("");
 
@@ -16,20 +14,24 @@ const recipeItems = computed(() => filteredRecipes(searchQuery.value));
 </script>
 
 <template>
-  <h1>Home</h1>
+  <h1 class="text-2xl">Home</h1>
 
-  <h2>Recipes</h2>
+  <h2 class="text-xl">Recipes</h2>
 
-  <TextInput id="search" label="Search recipe" v-model="searchQuery" />
+  <div class="py-4">
+    <TextInput id="search" label="Search recipe" v-model="searchQuery" />
+  </div>
 
   <hr />
 
-  <ul v-if="recipeItems && recipeItems.length > 0">
-    <li v-for="recipe in recipeItems">
-      <RouterLink :to="{ name: 'recipe', params: { id: recipe.id } }">{{
-        recipe.name
-      }}</RouterLink>
-    </li>
-  </ul>
-  <p v-else>No recipes found !</p>
+  <div class="ml-8">
+    <ul v-if="recipeItems && recipeItems.length > 0" class="list-disc">
+      <li v-for="recipe in recipeItems">
+        <RouterLink :to="{ name: 'recipe', params: { id: recipe.id } }">{{
+          recipe.name
+        }}</RouterLink>
+      </li>
+    </ul>
+    <p v-else>No recipes found !</p>
+  </div>
 </template>

@@ -9,7 +9,7 @@ const localStoragePlugin = (context: PiniaPluginContext) => {
     store.$patch(JSON.parse(storedState));
   }
 
-  store.$subscribe((mutation, state) => {
+  store.$subscribe((_, state) => {
     localStorage.setItem(store.$id, JSON.stringify(state));
   });
 };

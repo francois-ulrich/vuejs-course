@@ -1,29 +1,33 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { computed, watchEffect } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useRecipeStore } from "../stores/recipe";
 
 const route = useRoute();
+const router = useRouter();
 const recipeStore = useRecipeStore();
 
 const { getRecipeById } = recipeStore;
-// watch(
-//   () => route.params.id,
-//   () => {
-//     console.log(
-//       "Fetching data inside watch? Route params id: " + route.params.id
-//     );
-//   },
-//   { immediate: true }
-// );
 
 const recipe = computed(() => getRecipeById(route.params.id as string));
+
+watchEffect(() => {
+  if (recipe.value === undefined) router.push({ name: "not-found" });
+});
 </script>
 
 <template>
   <div v-if="recipe !== undefined">
-    {{ recipe }}
-  </div>
+    <RouterLink
+      :to="{ name: 'edit-recipe', params: { id: recipe.id } }"
+      class="btn-primary"
+      >Edit</RouterLink
+    >
 
-  <!-- <h1>Recipe id : {{ $route.params.id }}</h1> -->
+    <hr />
+
+    <p>Name : {{ recipe.name }}</p>
+    <p>Description :</p>
+    <p>{{ recipe.description }}</p>
+  </div>
 </template>

@@ -36,10 +36,25 @@ export const useRecipeStore = defineStore("recipe", () => {
     );
   };
 
+  const editRecipe = (recipeId: string, args: RecipeArgs) => {
+    const recipe = recipes.value.find((recipe) => recipe.id === recipeId);
+
+    if (recipe === undefined) return;
+
+    const editedRecipeValue = {
+      ...recipe,
+      name: args.name,
+      description: args.description,
+    };
+
+    recipes.value[recipes.value.indexOf(recipe)] = editedRecipeValue;
+  };
+
   return {
     recipes,
     getRecipeById,
     addRecipe,
+    editRecipe,
     filteredRecipes,
   };
 });

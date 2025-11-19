@@ -4,6 +4,7 @@ import AddRecipeView from "../components/Project06/views/AddRecipeView.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import RecipeView from "../components/Project06/views/RecipeView.vue";
 import NotFoundView from "../components/Project06/views/NotFoundView.vue";
+import EditRecipeView from "../components/Project06/views/EditRecipeView.vue";
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: "/project06/add-recipe",
     name: "add-recipe",
     component: AddRecipeView,
+  },
+  {
+    path: "/project06/edit-recipe/:id",
+    name: "edit-recipe",
+    component: EditRecipeView,
   },
   { path: "/:pathMatch(.*)*", name: "not-found", component: NotFoundView },
 ];
