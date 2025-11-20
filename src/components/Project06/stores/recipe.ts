@@ -13,6 +13,8 @@ export type RecipeArgs = Omit<Recipe, "id">;
 export const useRecipeStore = defineStore("recipe", () => {
   const recipes = ref<Recipe[]>([]);
 
+  const favouriteRecipesIds = ref<string[]>([]);
+
   const addRecipe = (args: RecipeArgs): Recipe => {
     const newRecipe = {
       ...args,
@@ -50,11 +52,36 @@ export const useRecipeStore = defineStore("recipe", () => {
     recipes.value[recipes.value.indexOf(recipe)] = editedRecipeValue;
   };
 
+  const isInFavourites = (recipe: Recipe): boolean => {
+    return (
+      favouriteRecipesIds.value.find(
+        (favouriteId) => favouriteId === recipe.id
+      ) !== undefined
+    );
+  };
+
+  const toggleFavourite = (recipe: Recipe) => {
+    const favouriteRecipeId = favouriteRecipesIds.value.find(
+      (favouriteId) => favouriteId === recipe.id
+    );
+
+    if (favouriteRecipeId === undefined) {
+      favouriteRecipesIds.value.push(recipe.id);
+    } else {
+      favouriteRecipesIds.value = favouriteRecipesIds.value.filter(
+        (favouriteId) => favouriteId !== recipe.id
+      );
+    }
+  };
+
   return {
     recipes,
+    favouriteRecipesIds,
     getRecipeById,
     addRecipe,
     editRecipe,
     filteredRecipes,
+    isInFavourites,
+    toggleFavourite,
   };
 });

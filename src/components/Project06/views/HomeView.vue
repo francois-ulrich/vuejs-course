@@ -8,9 +8,6 @@ const { filteredRecipes } = useRecipeStore();
 const searchQuery = ref<string>("");
 
 const recipeItems = computed(() => filteredRecipes(searchQuery.value));
-
-// const store = useStore();
-// store.secret // 'the cake is a lie'
 </script>
 
 <template>
