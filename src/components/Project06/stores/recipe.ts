@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 export interface Recipe {
@@ -74,9 +74,16 @@ export const useRecipeStore = defineStore("recipe", () => {
     }
   };
 
+  const favouriteRecipes = computed(() => {
+    return recipes.value.filter((recipe) =>
+      favouriteRecipesIds.value.includes(recipe.id)
+    );
+  });
+
   return {
     recipes,
     favouriteRecipesIds,
+    favouriteRecipes,
     getRecipeById,
     addRecipe,
     editRecipe,

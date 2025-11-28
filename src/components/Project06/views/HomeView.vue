@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TextInput from "../../../components/shared/Components/TextInput.vue";
+import RecipeList from "../components/RecipeList.vue";
 import { useRecipeStore } from "../stores/recipe";
 import { computed, ref } from "vue";
 
@@ -21,14 +22,5 @@ const recipeItems = computed(() => filteredRecipes(searchQuery.value));
 
   <hr />
 
-  <div class="ml-8">
-    <ul v-if="recipeItems && recipeItems.length > 0" class="list-disc">
-      <li v-for="recipe in recipeItems">
-        <RouterLink :to="{ name: 'recipe', params: { id: recipe.id } }">{{
-          recipe.name
-        }}</RouterLink>
-      </li>
-    </ul>
-    <p v-else>No recipes found !</p>
-  </div>
+  <RecipeList :recipes="recipeItems"></RecipeList>
 </template>
